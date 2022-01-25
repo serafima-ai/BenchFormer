@@ -1,3 +1,5 @@
 from .processors import (
-    DataProcessor
+    DataProcessor,
+    FeaturesProcessor,
+    TransformerDataProcessor,
 )

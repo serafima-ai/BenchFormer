@@ -1,3 +1,8 @@
 from .Processor import (
-    DataProcessor
+    DataProcessor,
+    FeaturesProcessor,
+)
+
+from .TransformerProcessor import (
+    TransformerDataProcessor,
 )
