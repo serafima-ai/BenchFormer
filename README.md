@@ -9,7 +9,7 @@
         <img alt="Codacy grade" src="https://img.shields.io/codacy/grade/15d9f2685c154c6f9fb022678f2e7a45">
     </a>
     <a href="#">
-        <img alt="GitHub License" src="https://img.shields.io/github/license/serafima-ai/BenchFormer">
+        <img alt="GitHub License" src="https://img.shields.io/github/license/serafima-ai/benchformer">
     </a>
     <a href="#">
        <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/serafima-ai/benchformer">
