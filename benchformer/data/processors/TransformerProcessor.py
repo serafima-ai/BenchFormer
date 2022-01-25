@@ -2,7 +2,7 @@ import torch
 from torch.utils.data import TensorDataset, RandomSampler, DataLoader
 from transformers import InputExample
 
-from benchformer.data.processors import DataProcessor
+from benchformer.data.processors import DataProcessor, FeaturesProcessor
 
 
 class TransformerDataProcessor(DataProcessor):
@@ -99,12 +99,3 @@ class TransformerDataProcessor(DataProcessor):
                              torch.tensor([f.attention_mask for f in features], dtype=torch.long),
                              torch.tensor([f.token_type_ids for f in features], dtype=torch.long),
                              torch.tensor([f.label for f in features], dtype=torch.long))
-
-
-class FeaturesProcessor(object):
-
-    def __init__(self, configs):
-        self.configs = configs
-
-    def convert_examples_to_features(self, examples, tokenizer):
-        raise NotImplementedError
