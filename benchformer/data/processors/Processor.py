@@ -1,5 +1,6 @@
 from torch.utils.data import random_split
 import pandas as pd
+from . import FeaturesProcessorBuilder
 
 
 class DataProcessor(object):
@@ -8,7 +9,7 @@ class DataProcessor(object):
 
         self.configs = configs
 
-        self.FeaturesProcessor = FeaturesProcessor(self.configs.features)
+        self.FeaturesProcessor = FeaturesProcessorBuilder.build(self.configs.features)
 
     def get_train_examples(self, df):
         raise NotImplementedError

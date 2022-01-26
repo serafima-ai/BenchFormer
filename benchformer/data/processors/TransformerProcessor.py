@@ -10,10 +10,6 @@ class TransformerDataProcessor(DataProcessor):
     def __init__(self, configs):
         super().__init__(configs)
 
-        self.configs = configs
-
-        self.FeaturesProcessor = FeaturesProcessor(self.configs.features)
-
     def get_train_examples(self, df):
         return self.create_examples(df, "train")
 
@@ -52,9 +48,11 @@ class TransformerDataProcessor(DataProcessor):
     def prepare_dataset(self, tokenizer):
         train_dataloader, val_dataloader, test_dataloader = self.prepare_train_dataset(tokenizer)
 
-        bert_test_dataloader = self.resolve_test_dataset(test_dataloader, tokenizer)
+        val_dataloader = self.resolve_dataset(val_dataloader, tokenizer)
 
-        return train_dataloader, val_dataloader, bert_test_dataloader
+        test_dataloader = self.resolve_dataset(test_dataloader, tokenizer, 'test')
+
+        return train_dataloader, val_dataloader, test_dataloader
 
     def prepare_train_dataset(self, tokenizer):
         dataframe = self.get_dataset()
@@ -66,32 +64,32 @@ class TransformerDataProcessor(DataProcessor):
 
         # train loader
         train_sampler = RandomSampler(train_dataset)
-        bert_train_dataloader = DataLoader(train_dataset, sampler=train_sampler,
-                                           batch_size=self.configs.batch_size)
+        train_dataloader = DataLoader(train_dataset, sampler=train_sampler, batch_size=self.configs.batch_size)
 
         # val loader
         val_sampler = RandomSampler(val_dataset)
-        bert_val_dataloader = DataLoader(val_dataset, sampler=val_sampler, batch_size=self.configs.batch_size)
+        val_dataloader = DataLoader(val_dataset, sampler=val_sampler, batch_size=self.configs.batch_size)
 
         # test loader
         test_sampler = RandomSampler(test_dataset)
-        bert_test_dataloader = DataLoader(test_dataset, sampler=test_sampler,
-                                          batch_size=self.configs.batch_size)
+        test_dataloader = DataLoader(test_dataset, sampler=test_sampler, batch_size=self.configs.batch_size)
 
-        return bert_train_dataloader, bert_val_dataloader, bert_test_dataloader
+        return train_dataloader, val_dataloader, test_dataloader
 
-    def resolve_test_dataset(self, test_dataloader, tokenizer):
-        if self.configs.test_dataset:
-            test_dataframe = self.get_dataset(self.configs.test_dataset)
-            dataset = self.get_test_examples(test_dataframe)
+    def resolve_dataset(self, dataloader, tokenizer, stage='val'):
+        dataset_path = self.configs.test_dataset if stage == 'test' else self.configs.val_dataset
+
+        if dataset_path:
+            dataframe = self.get_dataset(dataset_path)
+            dataset = self.get_test_examples(dataframe) if stage == 'test' else self.get_dev_examples(dataframe)
             features = self.FeaturesProcessor.convert_examples_to_features(dataset, tokenizer)
-            test_dataset = self.create_tensor_dataset(features)
+            dataset = self.create_tensor_dataset(features)
 
-            test_sampler = RandomSampler(test_dataset)
-            test_dataloader = DataLoader(test_dataset, sampler=test_sampler,
-                                         batch_size=self.configs.batch_size)
+            test_sampler = RandomSampler(dataset)
+            dataloader = DataLoader(dataset, sampler=test_sampler,
+                                    batch_size=self.configs.batch_size)
 
-        return test_dataloader
+        return dataloader
 
     @staticmethod
     def create_tensor_dataset(features) -> TensorDataset:
