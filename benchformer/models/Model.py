@@ -1,6 +1,7 @@
 import torch
 import pytorch_lightning as pl
 from . import ModelBuilder
+from benchformer.data import DataProcessorBuilder
 
 
 class Model(pl.LightningModule):
@@ -13,6 +14,10 @@ class Model(pl.LightningModule):
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
         self.net = ModelBuilder.build(self.configs.model)
+
+        self.data_processor = DataProcessorBuilder.build(self.configs.data)
+
+        self.train_dataloader, self.val_dataloader, self.test_dataloader = None, None, None
 
     def forward(self, **params):
 
@@ -75,6 +80,12 @@ class Model(pl.LightningModule):
     @pl.data_loader
     def test_dataloader(self):
         return self.test_dataloader
+
+    def load_dataset(self) -> bool:
+        dataset = self.data_processor.prepare_dataset(self.tokenizer)
+        self.train_dataloader, self.val_dataloader, self.test_dataloader = dataset
+
+        return self.train_dataset is not None and self.val_dataset is not None
 
     def aggregate_metrics(self, outputs, stage='val'):
         avg_loss = torch.stack([x['test_loss'] for x in outputs]).mean()
