@@ -1,9 +1,9 @@
 import torch
 import torch.nn as nn
-from ..models import FNetForLM
+from ..models import TransformerForLM
 
 
-class PARusTaskModel(FNetForLM):
+class PARusTaskModel(TransformerForLM):
 
     def __init__(self, configs):
         super().__init__(configs)

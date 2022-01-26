@@ -1,12 +1,20 @@
+from .Model import (
+    Model,
+    ModelForLMOutput,
+)
+
+from .TransformerModel import (
+    TransformerForLM,
+)
+
 from .fnet import (
     FNetModel,
     FNetForLM,
 )
 
-from .Model import Model, ModelForLMOutput
-
 models_implementations_dict = {
-    'fnet': fnet.FNetModel
+    'FNet': FNetModel,
+    'FNetForLM': FNetForLM
 }
 
 

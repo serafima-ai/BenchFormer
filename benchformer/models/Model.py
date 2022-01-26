@@ -97,18 +97,12 @@ class Model(pl.LightningModule):
 
 class ModelOutput(object):
 
-    def __init__(self, loss=None, hidden_states=None, attentions=None):
+    def __init__(self, loss=None):
         self.loss = loss
-        self.hidden_states = hidden_states
-        self.attentions = attentions
 
     def __getitem__(self, key):
         if key == "loss":
             return self.loss
-        if key == "hidden_states":
-            return self.hidden_states
-        if key == "attentions":
-            return self.attentions
 
         return None
 
@@ -117,12 +111,10 @@ class ModelForLMOutput(ModelOutput):
 
     def __init__(self,
                  loss=None,
-                 hidden_states=None,
-                 attentions=None,
                  prediction_logits=None,
                  seq_relationship_logits=None):
 
-        super().__init__(loss, hidden_states, attentions)
+        super().__init__(loss)
 
         self.prediction_logits = prediction_logits
         self.seq_relationship_logits = seq_relationship_logits
