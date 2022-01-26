@@ -1,5 +1,6 @@
 import torch
 import pytorch_lightning as pl
+from transformers import AutoTokenizer
 from . import ModelBuilder
 from benchformer.data import DataProcessorBuilder
 
@@ -14,6 +15,8 @@ class Model(pl.LightningModule):
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
         self.net = ModelBuilder.build(self.configs.model)
+
+        self.tokenizer = AutoTokenizer.from_pretrained(self.configs.get('tokenizer', 'bert-base-multilingual-cased'))
 
         self.data_processor = DataProcessorBuilder.build(self.configs.data)
 
