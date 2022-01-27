@@ -1,8 +1,11 @@
 import torch
 import torch.nn as nn
+
+from . import register_task
 from ..models import TransformerForLM
 
 
+@register_task('GluePARusModel')
 class PARusTaskModel(TransformerForLM):
 
     def __init__(self, configs):
