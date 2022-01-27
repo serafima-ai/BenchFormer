@@ -2,9 +2,10 @@ import codecs
 import json
 from transformers import InputFeatures, InputExample
 
-from benchformer.data.processors import TransformerDataProcessor, FeaturesProcessor
+from benchformer.data.processors import TransformerDataProcessor, FeaturesProcessor, register_processor
 
 
+@register_processor('GluePARusProcessor')
 class PARusDataProcessor(TransformerDataProcessor):
 
     def __init__(self, configs):
@@ -48,6 +49,7 @@ class PARusDataProcessor(TransformerDataProcessor):
         return examples
 
 
+@register_processor('GluePARusFeaturesProcessor')
 class PARusFeaturesProcessor(FeaturesProcessor):
 
     def __init__(self, configs):

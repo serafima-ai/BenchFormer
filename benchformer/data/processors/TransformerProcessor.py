@@ -2,9 +2,10 @@ import torch
 from torch.utils.data import TensorDataset, RandomSampler, DataLoader
 from transformers import InputExample
 
-from benchformer.data.processors import DataProcessor, FeaturesProcessor
+from benchformer.data.processors import DataProcessor, register_processor
 
 
+@register_processor('TransformerProcessor')
 class TransformerDataProcessor(DataProcessor):
 
     def __init__(self, configs):
