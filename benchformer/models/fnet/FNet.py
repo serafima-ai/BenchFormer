@@ -9,6 +9,8 @@ from transformers.models.bert.modeling_bert import (
     BertEmbeddings, BertAttention, BertIntermediate, BertOutput, BertPooler
 )
 
+from benchformer.models import register_model
+
 try:
     from scipy import linalg
 
@@ -140,6 +142,7 @@ class FNetEncoder(nn.Module):
             layer.init_weights(init_range)
 
 
+@register_model('FNet')
 class FNetModel(nn.Module):
 
     def __init__(self, configs):

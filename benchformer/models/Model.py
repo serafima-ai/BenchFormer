@@ -69,8 +69,9 @@ class Model(pl.LightningModule):
         return {'avg_test_loss': avg_loss, 'progress_bar': tensorboard_logs}
 
     def configure_optimizers(self):
-        return torch.optim.Adam([p for p in self.fnet.parameters() if p.requires_grad], lr=self.configs.learning_rate,
-                                eps=self.configs.epsilon)
+        return torch.optim.Adam([p for p in self.net.parameters() if p.requires_grad],
+                                lr=self.configs.optimizer.learning_rate,
+                                eps=self.configs.optimizer.epsilon)
 
     @pl.data_loader
     def train_dataloader(self):
