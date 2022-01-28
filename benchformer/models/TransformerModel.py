@@ -8,23 +8,19 @@ class TransformerForLM(Model):
     def __init__(self, configs):
         super().__init__(configs)
 
-        model_configs = configs.model
-
-        self.model = Model(model_configs)
-
         self.nsp_head = None
         self.heads = None
 
         if 'nsp_head' in self.configs.heads and 'mlm_head' in self.configs.heads:
-            self.heads = BertPreTrainingHeads(model_configs)
+            self.heads = BertPreTrainingHeads(self.net_config)
         elif 'nsp_head' in self.configs.heads:
-            self.nsp_head = BertOnlyNSPHead(model_configs)
+            self.nsp_head = BertOnlyNSPHead(self.net_config)
         elif 'mlm_head' in self.configs.heads:
-            self.mlm_head = BertOnlyMLMHead(model_configs)
+            self.mlm_head = BertOnlyMLMHead(self.net_config)
 
         self.loss = nn.CrossEntropyLoss()
 
-        self.vocab_size = model_configs.vocab_size
+        self.vocab_size = self.net_config.vocab_size
 
     def forward(self,
                 input_ids=None,
@@ -40,7 +36,7 @@ class TransformerForLM(Model):
         params = {'input_ids': input_ids, 'attention_mask': attention_mask, 'token_type_ids': token_type_ids,
                   'position_ids': position_ids, 'head_mask': head_mask, 'inputs_embeds': inputs_embeds}
 
-        outputs = self.model(**params)
+        outputs = super().forward(**params)
         sequence_output, pooled_output = outputs[:2]
 
         mlm_scores, nsp_score = None, None

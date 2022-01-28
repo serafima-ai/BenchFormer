@@ -19,7 +19,7 @@ def register_processor(name: str = None) -> type:
             features_processors_implementations_dict[processor_name] = cls
         else:
             global data_processors_implementations_dict
-            
+
             if processor_name in data_processors_implementations_dict:
                 print("Data processor class {} is already registered and will be overwritten!".format(processor_name))
 
@@ -36,9 +36,9 @@ class DataProcessorBuilder(object):
     @classmethod
     def build(cls, configs):
         try:
-            return cls.data_processors_dict[configs.data_processor_name](configs)
+            return cls.data_processors_dict[configs.data_processor](configs)
         except KeyError:
-            raise "{} data processor not implemented!".format(configs.data_processor_name)
+            raise "{} data processor not implemented!".format(configs.data_processor)
 
 
 class FeaturesProcessorBuilder(object):
@@ -47,6 +47,6 @@ class FeaturesProcessorBuilder(object):
     @classmethod
     def build(cls, configs):
         try:
-            return cls.features_processors_dict[configs.features_processor_name](configs)
+            return cls.features_processors_dict[configs.features_processor](configs)
         except KeyError:
-            raise "{} features processor not implemented!".format(configs.features_processor_name)
+            raise "{} features processor not implemented!".format(configs.features_processor)

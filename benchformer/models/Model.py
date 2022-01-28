@@ -14,7 +14,9 @@ class Model(pl.LightningModule):
 
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-        self.net = ModelBuilder.build(self.configs.model)
+        self.net_config = self.configs.net_config
+
+        self.net = ModelBuilder.build(self.net_config)
 
         self.tokenizer = AutoTokenizer.from_pretrained(self.configs.get('tokenizer', 'bert-base-multilingual-cased'))
 

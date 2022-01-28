@@ -9,7 +9,7 @@ from ..models import TransformerForLM
 class PARusTaskModel(TransformerForLM):
 
     def __init__(self, configs):
-        super().__init__(configs)
+        super().__init__(configs.model)
 
         self.proba_fn = nn.Softmax(dim=1)
         self.metrics = ['accuracy']

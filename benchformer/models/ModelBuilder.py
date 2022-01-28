@@ -9,7 +9,7 @@ def register_model(name: str = None) -> type:
             model_name = cls.__module__ + '.' + cls.__name__
 
         if model_name in models_implementations_dict:
-            print("Model class {} is already registered and will be overwritten!".format(name))
+            print("Model class {} is already registered and will be overwritten!".format(model_name))
 
         models_implementations_dict[model_name] = cls
 
@@ -23,7 +23,8 @@ class ModelBuilder(object):
 
     @classmethod
     def build(cls, configs):
+        print(configs.model_type)
         try:
-            return cls.models_dict[configs.model_name](configs)
+            return cls.models_dict[configs.model_type](configs)
         except KeyError:
-            raise "{} architecture not implemented!".format(configs.model_name)
+            raise "{} architecture not implemented!".format(configs.model_type)

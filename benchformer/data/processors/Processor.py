@@ -9,7 +9,7 @@ class DataProcessor(object):
 
         self.configs = configs
 
-        self.FeaturesProcessor = FeaturesProcessorBuilder.build(self.configs.features)
+        self.FeaturesProcessor = FeaturesProcessorBuilder.build(self.configs)
 
     def get_train_examples(self, df):
         raise NotImplementedError
