@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+from dotmap import DotMap
 
 from . import register_task
 from ..models import TransformerForLM
@@ -8,26 +9,26 @@ from ..models import TransformerForLM
 @register_task('GluePARusModel')
 class PARusTaskModel(TransformerForLM):
 
-    def __init__(self, configs):
+    def __init__(self, configs: DotMap):
         super().__init__(configs.model)
 
         self.proba_fn = nn.Softmax(dim=1)
         self.metrics = ['accuracy']
 
-    def training_step(self, batch, batch_nb):
+    def training_step(self, batch, batch_nb) -> dict:
         input_ids, attention_mask, token_type_ids, nsp_labels = batch[:4]
 
         outputs = self.forward(input_ids, attention_mask, token_type_ids, next_sentence_label=nsp_labels)
 
         return {'loss': outputs.loss}
 
-    def validation_step(self, batch, batch_nb):
+    def validation_step(self, batch, batch_nb) -> dict:
         return self.calculate_metrics(batch)
 
-    def test_step(self, batch, batch_nb):
+    def test_step(self, batch, batch_nb) -> dict:
         return self.calculate_metrics(batch, stage='test')
 
-    def calculate_metrics(self, batch, stage='val'):
+    def calculate_metrics(self, batch, stage: str = 'val') -> dict:
         input_ids, attention_mask, token_type_ids, nsp_labels = batch[:4]
 
         outputs = self.forward(input_ids, attention_mask, token_type_ids, next_sentence_label=nsp_labels)

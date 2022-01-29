@@ -1,3 +1,5 @@
+from dotmap import DotMap
+
 tasks_implementations_dict = {}
 
 
@@ -21,7 +23,7 @@ class TaskModelBuilder(object):
     tasks_dict = tasks_implementations_dict
 
     @classmethod
-    def build(cls, configs):
+    def build(cls, configs: DotMap):
         try:
             return cls.tasks_dict[configs.task_name](configs)
         except KeyError:
