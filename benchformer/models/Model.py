@@ -22,11 +22,11 @@ class Model(pl.LightningModule):
 
         self.data_processor = DataProcessorBuilder.build(self.configs.data)
 
-        self.train_dataloader, self.val_dataloader, self.test_dataloader = None, None, None
+        self.train_loader, self.val_loader, self.test_loader = None, None, None
 
     def forward(self, **params):
 
-        device_params = {k: v.to(self.net.device) if v is not None else v for k, v in params.items()}
+        device_params = {k: v.to(self.device) if v is not None else v for k, v in params.items()}
 
         outputs = self.net(**device_params)
 
@@ -77,24 +77,24 @@ class Model(pl.LightningModule):
 
     @pl.data_loader
     def train_dataloader(self):
-        return self.train_dataloader
+        return self.train_loader
 
     @pl.data_loader
     def val_dataloader(self):
-        return self.val_dataloader
+        return self.val_loader
 
     @pl.data_loader
     def test_dataloader(self):
-        return self.test_dataloader
+        return self.test_loader
 
     def load_dataset(self) -> bool:
         dataset = self.data_processor.prepare_dataset(self.tokenizer)
-        self.train_dataloader, self.val_dataloader, self.test_dataloader = dataset
+        self.train_loader, self.val_loader, self.test_loader = dataset
 
-        return self.train_dataset is not None and self.val_dataset is not None
+        return self.train_loader is not None and self.val_loader is not None
 
     def aggregate_metrics(self, outputs, stage='val'):
-        avg_loss = torch.stack([x['test_loss'] for x in outputs]).mean()
+        avg_loss = torch.stack([x[stage + '_loss'] for x in outputs]).mean()
         avg_metrics = {}
 
         for metric in self.metrics:

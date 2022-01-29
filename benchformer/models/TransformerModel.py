@@ -9,6 +9,7 @@ class TransformerForLM(Model):
         super().__init__(configs)
 
         self.nsp_head = None
+        self.mlm_head = None
         self.heads = None
 
         if 'nsp_head' in self.configs.heads and 'mlm_head' in self.configs.heads:
@@ -52,12 +53,12 @@ class TransformerForLM(Model):
 
         loss = None
 
-        if labels and mlm_scores:
-            mlm_loss = self.loss(mlm_scores.view(-1, self.vocab_size), labels.view(-1))
+        if labels is not None and mlm_scores is not None:
+            mlm_loss = self.loss(mlm_scores.view(-1, self.vocab_size).cpu(), labels.view(-1))
             loss = mlm_loss
 
-        if next_sentence_label and nsp_score:
-            nsp_loss = self.loss(nsp_score.view(-1, 2), next_sentence_label.view(-1))
+        if next_sentence_label is not None and nsp_score is not None:
+            nsp_loss = self.loss(nsp_score.view(-1, 2).cpu(), next_sentence_label.view(-1))
             loss = loss + nsp_loss if loss else nsp_loss
 
         return TransformerForLMOutput(

@@ -23,7 +23,6 @@ class ModelBuilder(object):
 
     @classmethod
     def build(cls, configs):
-        print(configs.model_type)
         try:
             return cls.models_dict[configs.model_type](configs)
         except KeyError:
