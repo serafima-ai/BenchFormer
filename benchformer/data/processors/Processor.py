@@ -1,3 +1,4 @@
+from dotmap import DotMap
 from torch.utils.data import random_split
 import pandas as pd
 from . import FeaturesProcessorBuilder
@@ -5,7 +6,7 @@ from . import FeaturesProcessorBuilder
 
 class DataProcessor(object):
 
-    def __init__(self, configs):
+    def __init__(self, configs: DotMap):
 
         self.configs = configs
 
@@ -23,7 +24,7 @@ class DataProcessor(object):
     def prepare_dataset(self, tokenizer):
         raise NotImplementedError
 
-    def get_dataset(self, path='', data_type='csv'):
+    def get_dataset(self, path: str = '', data_type: str = 'csv'):
         if path is '':
             path = self.configs.get('train_dataset', path)
 
@@ -35,7 +36,7 @@ class DataProcessor(object):
 
         return None
 
-    def split_dataset(self, train_dataset, train_set=0.87, val_set=0.13, test_set=0.0):
+    def split_dataset(self, train_dataset, train_set: int = 0.87, val_set: int = 0.13, test_set: int = 0.0) -> list:
         train_set_split_prop = float(self.configs.get('train_set_proportion', train_set))
         val_set_split_prop = float(self.configs.get('val_set_proportion', val_set))
         test_set_split_prop = float(self.configs.get('test_set_proportion', test_set))
@@ -54,7 +55,7 @@ class DataProcessor(object):
 
 class FeaturesProcessor(object):
 
-    def __init__(self, configs):
+    def __init__(self, configs: DotMap):
         self.configs = configs
 
     def convert_examples_to_features(self, examples, tokenizer):

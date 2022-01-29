@@ -1,5 +1,7 @@
 import codecs
 import json
+from pathlib import Path
+from dotmap import DotMap
 from transformers import InputFeatures, InputExample
 
 from benchformer.data.processors import TransformerDataProcessor, FeaturesProcessor, register_processor
@@ -8,11 +10,16 @@ from benchformer.data.processors import TransformerDataProcessor, FeaturesProces
 @register_processor('GluePARusProcessor')
 class PARusDataProcessor(TransformerDataProcessor):
 
-    def __init__(self, configs):
+    def __init__(self, configs: DotMap):
         super().__init__(configs)
 
-    def get_dataset(self, path='', data_type='csv'):
-        path = self.configs.get('train_dataset', path)
+    def get_dataset(self, path: str = '', data_type: str = 'csv') -> list:
+        if not path:
+            print('Dataset path not specified! Training path from config file would be used instead.')
+            path = self.configs.get('train_dataset', path)
+
+        if not Path(path).is_file():
+            raise FileNotFoundError("Dataset file was not found!")
 
         with codecs.open(path, encoding='utf-8-sig') as reader:
             lines = reader.read().split("\n")
@@ -21,11 +28,13 @@ class PARusDataProcessor(TransformerDataProcessor):
         return lines
 
     @staticmethod
-    def build_features(row):
+    def build_features(row) -> tuple:
         premise = str(row["premise"]).strip()
         choice1 = row["choice1"]
         # choice2 = row["choice2"]
         label = row.get("label")
+        label = label if label is not None else 0
+
         question = "Что было причиной этого?" if row["question"] == "cause" else "Что случилось в результате?"
         # text_a = f"{premise} {question} {choice1}"
         # text_b = f"{choice2}"
@@ -34,7 +43,7 @@ class PARusDataProcessor(TransformerDataProcessor):
         # res = f"{premise} {question} {choice1} {choice2}"
         return (text_a, text_b), label
 
-    def create_examples(self, df, set_type):
+    def create_examples(self, df, set_type: str) -> list:
         res = list(map(self.build_features, df))
         texts = list(map(lambda x: x[0], res))
         labels = list(map(lambda x: x[1], res))
@@ -52,7 +61,7 @@ class PARusDataProcessor(TransformerDataProcessor):
 @register_processor('GluePARusFeaturesProcessor')
 class PARusFeaturesProcessor(FeaturesProcessor):
 
-    def __init__(self, configs):
+    def __init__(self, configs: DotMap):
         super().__init__(configs)
 
         self.configs = configs
@@ -73,7 +82,7 @@ class PARusFeaturesProcessor(FeaturesProcessor):
             else:
                 tokens_b.pop()
 
-    def convert_examples_to_features(self, examples, tokenizer, max_length=512):
+    def convert_examples_to_features(self, examples, tokenizer, max_length=512) -> list:
         """Loads a data file into a list of `InputBatch`s."""
 
         features = []

@@ -1,4 +1,5 @@
 import torch
+from dotmap import DotMap
 from torch.utils.data import TensorDataset, RandomSampler, DataLoader
 from transformers import InputExample
 
@@ -8,19 +9,19 @@ from benchformer.data.processors import DataProcessor, register_processor
 @register_processor('TransformerProcessor')
 class TransformerDataProcessor(DataProcessor):
 
-    def __init__(self, configs):
+    def __init__(self, configs: DotMap):
         super().__init__(configs)
 
-    def get_train_examples(self, df):
+    def get_train_examples(self, df) -> list:
         return self.create_examples(df, "train")
 
-    def get_dev_examples(self, df):
+    def get_dev_examples(self, df) -> list:
         return self.create_examples(df, "dev")
 
-    def get_test_examples(self, df):
+    def get_test_examples(self, df) -> list:
         return self.create_examples(df, "test")
 
-    def create_examples(self, df, set_type):
+    def create_examples(self, df, set_type: str) -> list:
         """Creates examples for the training and dev sets."""
         examples = []
         for idx, row in df.iterrows():
@@ -46,7 +47,7 @@ class TransformerDataProcessor(DataProcessor):
 
         return examples
 
-    def prepare_dataset(self, tokenizer):
+    def prepare_dataset(self, tokenizer) -> tuple:
         train_dataloader, val_dataloader, test_dataloader = self.prepare_train_dataset(tokenizer)
 
         val_dataloader = self.resolve_dataset(val_dataloader, tokenizer)
@@ -55,7 +56,7 @@ class TransformerDataProcessor(DataProcessor):
 
         return train_dataloader, val_dataloader, test_dataloader
 
-    def prepare_train_dataset(self, tokenizer):
+    def prepare_train_dataset(self, tokenizer) -> tuple:
         dataframe = self.get_dataset()
         dataset = self.get_train_examples(dataframe)
 
@@ -82,7 +83,7 @@ class TransformerDataProcessor(DataProcessor):
 
         return train_dataloader, val_dataloader, test_dataloader
 
-    def resolve_dataset(self, dataloader, tokenizer, stage='val'):
+    def resolve_dataset(self, dataloader: DataLoader, tokenizer, stage: str = 'val') -> DataLoader:
         dataset_path = self.configs.test_dataset if stage == 'test' else self.configs.val_dataset
 
         if dataset_path:

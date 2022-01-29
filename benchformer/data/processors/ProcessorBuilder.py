@@ -1,3 +1,5 @@
+from dotmap import DotMap
+
 data_processors_implementations_dict = {}
 features_processors_implementations_dict = {}
 
@@ -34,7 +36,7 @@ class DataProcessorBuilder(object):
     data_processors_dict = data_processors_implementations_dict
 
     @classmethod
-    def build(cls, configs):
+    def build(cls, configs: DotMap) -> object:
         try:
             return cls.data_processors_dict[configs.data_processor](configs)
         except KeyError:
@@ -45,7 +47,7 @@ class FeaturesProcessorBuilder(object):
     features_processors_dict = features_processors_implementations_dict
 
     @classmethod
-    def build(cls, configs):
+    def build(cls, configs: DotMap) -> object:
         try:
             return cls.features_processors_dict[configs.features_processor](configs)
         except KeyError:
