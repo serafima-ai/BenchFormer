@@ -61,19 +61,24 @@ class TransformerDataProcessor(DataProcessor):
 
         features = self.FeaturesProcessor.convert_examples_to_features(dataset, tokenizer)
         train_dataset = self.create_tensor_dataset(features)
-        train_dataset, val_dataset, test_dataset = self.split_dataset(train_dataset, default_dataset=TensorDataset)
+        train_subset, val_subset, test_subset = self.split_dataset(train_dataset)
+
+        train_dataloader, val_dataloader, test_dataloader = None, None, None
 
         # train loader
-        train_sampler = RandomSampler(train_dataset)
-        train_dataloader = DataLoader(train_dataset, sampler=train_sampler, batch_size=self.configs.batch_size)
+        if train_subset.indices:
+            train_sampler = RandomSampler(train_dataset)
+            train_dataloader = DataLoader(train_dataset, sampler=train_sampler, batch_size=self.configs.batch_size)
 
         # val loader
-        val_sampler = RandomSampler(val_dataset)
-        val_dataloader = DataLoader(val_dataset, sampler=val_sampler, batch_size=self.configs.batch_size)
+        if val_subset.indices:
+            val_sampler = RandomSampler(val_subset)
+            val_dataloader = DataLoader(val_subset, sampler=val_sampler, batch_size=self.configs.batch_size)
 
         # test loader
-        test_sampler = RandomSampler(test_dataset)
-        test_dataloader = DataLoader(test_dataset, sampler=test_sampler, batch_size=self.configs.batch_size)
+        if test_subset.indices:
+            test_sampler = RandomSampler(test_subset)
+            test_dataloader = DataLoader(test_subset, sampler=test_sampler, batch_size=self.configs.batch_size)
 
         return train_dataloader, val_dataloader, test_dataloader
 

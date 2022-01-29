@@ -35,7 +35,7 @@ class DataProcessor(object):
 
         return None
 
-    def split_dataset(self, train_dataset, train_set=0.87, val_set=0.13, test_set=0.0, default_dataset=list):
+    def split_dataset(self, train_dataset, train_set=0.87, val_set=0.13, test_set=0.0):
         train_set_split_prop = float(self.configs.get('train_set_proportion', train_set))
         val_set_split_prop = float(self.configs.get('val_set_proportion', val_set))
         test_set_split_prop = float(self.configs.get('test_set_proportion', test_set))
@@ -48,9 +48,6 @@ class DataProcessor(object):
         nb_train_samples = int(train_set_split_prop * len(train_dataset))
         nb_val_samples = int(val_set_split_prop * len(train_dataset))  # len(train_dataset) - nb_train_samples
         nb_test_samples = len(train_dataset) - nb_train_samples - nb_val_samples
-
-        if nb_test_samples == 0:
-            return random_split(train_dataset, [nb_train_samples, nb_val_samples]), default_dataset()
 
         return random_split(train_dataset, [nb_train_samples, nb_val_samples, nb_test_samples])
 
