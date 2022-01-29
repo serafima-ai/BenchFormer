@@ -1,5 +1,7 @@
 import torch
 import pytorch_lightning as pl
+from dotmap import DotMap
+from torch.utils.data import DataLoader
 from transformers import AutoTokenizer
 from . import ModelBuilder
 from benchformer.data import DataProcessorBuilder
@@ -7,7 +9,7 @@ from benchformer.data import DataProcessorBuilder
 
 class Model(pl.LightningModule):
 
-    def __init__(self, configs):
+    def __init__(self, configs: DotMap):
         super().__init__()
 
         self.configs = configs
@@ -32,7 +34,7 @@ class Model(pl.LightningModule):
 
         return outputs
 
-    def training_step(self, batch, batch_nb):
+    def training_step(self, batch, batch_nb) -> dict:
         input_ids, attention_mask, token_type_ids, labels = batch[:4]
 
         outputs = self.forward(input_ids=input_ids, attention_mask=attention_mask, token_type_ids=token_type_ids,
@@ -40,7 +42,7 @@ class Model(pl.LightningModule):
 
         return {'loss': outputs.loss}
 
-    def validation_step(self, batch, batch_nb):
+    def validation_step(self, batch, batch_nb) -> dict:
         input_ids, attention_mask, token_type_ids, labels = batch[:4]
 
         outputs = self.forward(input_ids=input_ids, attention_mask=attention_mask, token_type_ids=token_type_ids,
@@ -48,14 +50,14 @@ class Model(pl.LightningModule):
 
         return {'val_loss': outputs.loss}
 
-    def validation_end(self, outputs):
+    def validation_end(self, outputs) -> dict:
         avg_loss, avg_metrics = self.aggregate_metrics(outputs, stage='val')
 
         tensorboard_logs = {**{'val_loss': avg_loss}, **avg_metrics}
 
         return {'avg_val_loss': avg_loss, 'progress_bar': tensorboard_logs}
 
-    def test_step(self, batch, batch_nb):
+    def test_step(self, batch, batch_nb) -> dict:
         input_ids, attention_mask, token_type_ids, labels = batch[:4]
 
         outputs = self.forward(input_ids=input_ids, attention_mask=attention_mask, token_type_ids=token_type_ids,
@@ -63,7 +65,7 @@ class Model(pl.LightningModule):
 
         return {'test_loss': outputs.loss}
 
-    def test_end(self, outputs):
+    def test_end(self, outputs) -> dict:
         avg_loss, avg_metrics = self.aggregate_metrics(outputs, stage='test')
 
         tensorboard_logs = {**{'test_loss': avg_loss}, **avg_metrics}
@@ -71,20 +73,20 @@ class Model(pl.LightningModule):
         return {'avg_test_loss': avg_loss, 'progress_bar': tensorboard_logs}
 
     def configure_optimizers(self):
-        return torch.optim.Adam([p for p in self.net.parameters() if p.requires_grad],
+        return torch.optim.Adam([p for p in self.parameters() if p.requires_grad],
                                 lr=self.configs.optimizer.learning_rate,
                                 eps=self.configs.optimizer.epsilon)
 
     @pl.data_loader
-    def train_dataloader(self):
+    def train_dataloader(self) -> DataLoader:
         return self.train_loader
 
     @pl.data_loader
-    def val_dataloader(self):
+    def val_dataloader(self) -> DataLoader:
         return self.val_loader
 
     @pl.data_loader
-    def test_dataloader(self):
+    def test_dataloader(self) -> DataLoader:
         return self.test_loader
 
     def load_dataset(self) -> bool:
@@ -117,7 +119,7 @@ class ModelOutput(object):
     def __init__(self, loss=None):
         self.loss = loss
 
-    def __getitem__(self, key):
+    def __getitem__(self, key: str):
         if key == "loss":
             return self.loss
 
@@ -136,7 +138,7 @@ class ModelForLMOutput(ModelOutput):
         self.prediction_logits = prediction_logits
         self.seq_relationship_logits = seq_relationship_logits
 
-    def __getitem__(self, key):
+    def __getitem__(self, key: str):
 
         if key == "prediction_logits":
             return self.prediction_logits

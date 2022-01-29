@@ -118,7 +118,9 @@ class FNetLayer(nn.Module):
         self.ff.init_weights(init_range)
 
         if isinstance(self.attn, BertAttention):
-            self.attn.init_weights(init_range)
+            self.attn.self.query.weight.data.uniform_(-init_range, init_range)  # #self.attn.init_weights(init_range)
+            self.attn.self.key.weight.data.uniform_(-init_range, init_range)
+            self.attn.self.value.weight.data.uniform_(-init_range, init_range)
 
 
 class FNetEncoder(nn.Module):
@@ -145,7 +147,7 @@ class FNetEncoder(nn.Module):
 @register_model('FNet')
 class FNetModel(nn.Module):
 
-    def __init__(self, configs):
+    def __init__(self, configs: DotMap):
         super().__init__()
 
         self.config = configs
@@ -154,9 +156,13 @@ class FNetModel(nn.Module):
         self.encoder = FNetEncoder(configs)
         self.pooler = BertPooler(configs)
 
+        self.init_weights()
+
+    # TODO: rewrite with torch.nn.Module.apply(fn)
     def init_weights(self):
-        self.encoder.init_weights(self.config.initializer_range)
-        self.pooler.init_weights(self.config.initializer_range)
+        init_range = self.config.initializer_range
+        self.encoder.init_weights(init_range)
+        self.pooler.dense.weight.data.uniform_(-init_range, init_range)
 
     def forward(self, input_ids, attention_mask, token_type_ids, position_ids, head_mask, inputs_embeds):
         embeddings = self.embeddings(input_ids, token_type_ids, position_ids, inputs_embeds)

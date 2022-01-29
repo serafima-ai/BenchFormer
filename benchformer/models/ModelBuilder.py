@@ -1,3 +1,5 @@
+from dotmap import DotMap
+
 models_implementations_dict = {}
 
 
@@ -22,7 +24,7 @@ class ModelBuilder(object):
     models_dict = models_implementations_dict
 
     @classmethod
-    def build(cls, configs):
+    def build(cls, configs: DotMap):
         try:
             return cls.models_dict[configs.model_type](configs)
         except KeyError:

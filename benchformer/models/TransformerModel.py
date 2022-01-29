@@ -1,11 +1,12 @@
 import torch.nn as nn
+from dotmap import DotMap
 from transformers.models.bert.modeling_bert import BertPreTrainingHeads, BertOnlyNSPHead, BertOnlyMLMHead
 from benchformer.models import Model, ModelForLMOutput
 
 
 class TransformerForLM(Model):
 
-    def __init__(self, configs):
+    def __init__(self, configs: DotMap):
         super().__init__(configs)
 
         self.nsp_head = None
@@ -68,7 +69,7 @@ class TransformerForLM(Model):
             seq_relationship_logits=nsp_score
         )
 
-    def training_step(self, batch, batch_nb):
+    def training_step(self, batch, batch_nb) -> dict:
         input_ids, attention_mask, token_type_ids, mlm_labels, nsp_labels = batch[:5]
 
         outputs = self.forward(input_ids, attention_mask, token_type_ids, labels=mlm_labels,
@@ -76,7 +77,7 @@ class TransformerForLM(Model):
 
         return {'loss': outputs.loss}
 
-    def validation_step(self, batch, batch_nb):
+    def validation_step(self, batch, batch_nb) -> dict:
         input_ids, attention_mask, token_type_ids, mlm_labels, nsp_labels = batch[:5]
 
         outputs = self.forward(input_ids, attention_mask, token_type_ids, labels=mlm_labels,
@@ -84,7 +85,7 @@ class TransformerForLM(Model):
 
         return {'loss': outputs.loss}
 
-    def test_step(self, batch, batch_nb):
+    def test_step(self, batch, batch_nb) -> dict:
         input_ids, attention_mask, token_type_ids, mlm_labels, nsp_labels = batch[:5]
 
         outputs = self.forward(input_ids, attention_mask, token_type_ids, labels=mlm_labels,
@@ -107,7 +108,7 @@ class TransformerForLMOutput(ModelForLMOutput):
         self.hidden_states = hidden_states
         self.attentions = attentions
 
-    def __getitem__(self, key):
+    def __getitem__(self, key: str):
 
         if key == "hidden_states":
             return self.hidden_states
