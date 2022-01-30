@@ -1,3 +1,17 @@
+#  Copyright (c) 2022 The Serafima.ai Team. All rights reserved.
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
 from dotmap import DotMap
 from torch.utils.data import random_split
 import pandas as pd
@@ -5,6 +19,17 @@ from . import FeaturesProcessorBuilder
 
 
 class DataProcessor(object):
+    """
+    Abstract class for data processors is responsible for data loading, preprocessing and splitting on train/dev/test
+    sets depending on the configs.
+
+    Args:
+        configs (DotMap): Contains parameters required for the initialization and usage of the data processor.
+
+    Attributes:
+        configs (DotMap): Stores data processor configuration.
+        FeaturesProcessor (FeaturesProcessor): Converts dataset examples to the input features.
+    """
 
     def __init__(self, configs: DotMap):
 
@@ -25,7 +50,7 @@ class DataProcessor(object):
         raise NotImplementedError
 
     def get_dataset(self, path: str = '', data_type: str = 'csv'):
-        if path is '':
+        if path == '':
             path = self.configs.get('train_dataset', path)
 
         if data_type == 'csv':
@@ -54,6 +79,15 @@ class DataProcessor(object):
 
 
 class FeaturesProcessor(object):
+    """
+    Abstract class for features processors is responsible for converting dataset examples into features.
+
+    Args:
+        configs (DotMap): Contains parameters required for the initialization and usage of the features processor.
+
+    Attributes:
+        configs (DotMap): Stores features processor configuration.
+    """
 
     def __init__(self, configs: DotMap):
         self.configs = configs
