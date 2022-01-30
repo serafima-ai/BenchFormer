@@ -1,0 +1,29 @@
+{
+  "attention_dropout_prob": 0.1,
+  "gradient_checkpointing": false,
+  "hidden_act": "gelu",
+  "intermediate_dropout_prob": 0.1,
+  "attention_probs_dropout_prob": 0.1,
+  "hidden_dropout_prob": 0.1,
+  "hidden_size": 768,
+  "input_size": 768,
+  "initializer_range": 0.02,
+  "intermediate_size": 3072,
+  "layer_norm_eps": 1e-12,
+  "max_position_embeddings": 512,
+  "model_type": "FNet",
+  "num_attention_heads": 12,
+  "num_layers": 12,
+  "pad_token_id": 0,
+  "position_embedding_type": "absolute",
+  "type_vocab_size": 2,
+  "use_cache": true,
+  "vocab_size": 119547,
+  "spec_attention_layers": [
+    10,
+    11
+  ],
+  "mask_init": "constant",
+  "mask_scale": 0.0,
+  "pruning_method": "topK"
+}

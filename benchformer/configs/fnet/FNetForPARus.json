@@ -1,0 +1,28 @@
+{
+  "task": {
+    "task_name": "GluePARusModel",
+    "models": [
+      {
+        "model_type": "FNet",
+        "tokenizer": "bert-base-multilingual-cased",
+        "net_configs": "../benchformer/configs/fnet/configs.json",
+        "heads": [
+          "nsp_head"
+        ],
+        "optimizer": {
+          "learning_rate": 2e-05,
+          "epsilon": 1e-08
+        }
+      }
+    ],
+    "data": {
+      "data_processor": "GluePARusProcessor",
+      "features_processor": "GluePARusFeaturesProcessor",
+      "train_dataset": "../combined/PARus/train.jsonl",
+      "val_dataset": "../combined/PARus/val.jsonl",
+      "test_dataset": "../combined/PARus/test.jsonl",
+      "train_set_proportion": 1.0,
+      "batch_size": 16
+    }
+  }
+}
