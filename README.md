@@ -25,3 +25,75 @@
 <h3 align="center">
     <p>Benchmarking tool for Transformer architecture models in various natural language understanding tasks.</p>
 </h3>
+
+<h3>Installation</h3>
+<hr>
+<p>Install the package using pip package manager:</p>
+<pre>pip install benchformer</pre>
+
+<h3>Progress</h3>
+<hr>
+<table>
+  <tr>
+    <td><center>Model</center></td>
+    <td colspan="8"><center>Task</center></td>
+  </tr>
+  <tr>
+  <td colspan="9"><center><a href="https://russiansuperglue.com/">RUSSIAN SUPERGLUE</a></center></td>
+  </tr>
+  <tr>
+  <td></td>
+  <td>PARus</td>
+  <td>LiDiRus</td>
+  <td>RCB</td>
+  <td>MuSeRC</td>
+  <td>TERRa</td>
+  <td>RWSD</td>
+  <td>DaNetQA</td>
+  <td>RuCoS</td>
+  </tr>
+  <tr>
+  <td><a href="https://arxiv.org/pdf/2105.03824.pdf">FNet</a></td>
+  <td><center><a href="https://github.com/serafima-ai/BenchFormer/blob/master/examples/GluePARus.ipynb">+</a></center></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  </tr>
+  <tr>
+  <td>BERT</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  </tr>
+  <tr>
+  <td>DistilBERT</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  </tr>
+  <tr>
+  <td>T5</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  </tr>
+</table>
