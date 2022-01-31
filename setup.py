@@ -26,7 +26,7 @@ with open('README.md', 'r', encoding='utf-8') as fh:
 
 setuptools.setup(
     name="benchformer",
-    version="0.0.1.dev0",
+    version="0.0.1.dev1",
     author="Nikita Syromiatnikov",
     author_email="nik@serafima.ai",
     description="Transformers Language Models benchmarking tool",

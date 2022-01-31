@@ -35,11 +35,11 @@
 <hr>
 <table>
   <tr>
-    <td><center>Model</center></td>
-    <td colspan="8"><center>Task</center></td>
+    <td style="text-align: center;">Model</td>
+    <td colspan="8" style="text-align: center;">Task</td>
   </tr>
   <tr>
-  <td colspan="9"><center><a href="https://russiansuperglue.com/">RUSSIAN SUPERGLUE</a></center></td>
+  <td colspan="9" style="text-align: center;"><a href="https://russiansuperglue.com/">RUSSIAN SUPERGLUE</a></td>
   </tr>
   <tr>
   <td></td>
@@ -54,7 +54,7 @@
   </tr>
   <tr>
   <td><a href="https://arxiv.org/pdf/2105.03824.pdf">FNet</a></td>
-  <td><center><a href="https://github.com/serafima-ai/BenchFormer/blob/master/examples/GluePARus.ipynb">+</a></center></td>
+  <td style="text-align: center;"><a href="https://github.com/serafima-ai/BenchFormer/blob/master/examples/GluePARus.ipynb">+</a></td>
   <td></td>
   <td></td>
   <td></td>
