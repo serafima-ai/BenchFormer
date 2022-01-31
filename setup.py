@@ -26,7 +26,7 @@ with open('README.md', 'r', encoding='utf-8') as fh:
 
 setuptools.setup(
     name="benchformer",
-    version="0.0.1dev0",
+    version="0.0.1.dev0",
     author="Nikita Syromiatnikov",
     author_email="nik@serafima.ai",
     description="Transformers Language Models benchmarking tool",
@@ -49,7 +49,7 @@ setuptools.setup(
         "Topic :: Scientific/Engineering :: Artificial Intelligence",
 
     ],
-    # package_dir={"": "benchformer"},
+    include_package_data=True,
     packages=setuptools.find_packages(),
     python_requires=">=3.6",
     **parse_requirements()

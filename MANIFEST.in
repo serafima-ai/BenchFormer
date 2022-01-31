@@ -1,3 +1,2 @@
 include requirements.txt
-include configs/*.json
-include examples/*.ipynb
+recursive-include benchformer/configs *.json
